@@ -1,0 +1,100 @@
+<html>
+<style>
+  .card{
+    width:300px;
+		padding:10px;
+		margin:10px;
+		display:inline-block;
+		border-radius:10px;
+  
+  }
+    .card:hover{
+    color: gray;
+    -webkit-transition: width 2s;
+    transition: width 2s;
+  }
+</style>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="65.html">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Tutorial</a></li>
+        <li class="active"><a href="file:///C:/Users/cbalk6608/Documents/Web%20Server/Project%202/testing.html">Quiz</a></li>
+      </ul>
+    </div>
+  </nav>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script type = "text/template" id="template">
+    <div class = 'card'>
+      <div class="panel panel-info">  
+      <div class="panel-heading">{{Question}}</div>
+      <div class="panel-body">A) {{AC1}}</div>
+      <div class="panel-body">B) {{AC2}}</div>
+      <div class="panel-body">C) {{AC3}}</div>
+      <div class="panel-body">D) {{AC4}}</div>
+      <input type="submit" class="w3-btn w3-orange w3-large w3-text-white" value=" Next ">
+      <input id = "{{Id}}" placeholder = "Enter Answer">
+      </div>
+      </div>
+    <div>
+  </script>
+
+  <script>
+      var data;
+      function loadJSON(){
+          $.getJSON("https://project-b4112.firebaseio.com/.json",function(results){
+              data = results;
+              displayData()
+          })
+      }
+
+      function displayData(){
+          var build = "";
+          var output = document.getElementById("output");	
+          var CardTemplate = document.getElementById("template").innerHTML;
+          for(var key in data.Value ){
+            build += Mustache.render(CardTemplate,data.Value[key])
+          } 
+          output.innerHTML = build
+      }
+      function displayData2(){
+          var build = "";
+          var output = document.getElementById("output");	
+          var CardTemplate = document.getElementById("template").innerHTML;
+          for(var index in data["Origin "] ){
+            build += Mustache.render(CardTemplate,data["Origin "][index])
+          output.innerHTML = build
+          } 
+      }
+    function Grade(){
+      var score = 0;
+      for(var index = 1; index <= 5; index += 1){
+        var correctAnswer = data.Value["q" + index].Answer;
+        var correctAnswer2 = data.Value["q" + index]["Answer "];
+        var userAnswer = document.getElementById("q" + index).value
+        if(userAnswer == correctAnswer || correctAnswer2 ){
+          score += 1;
+        }
+        console.log(correctAnswer)
+        console.log(correctAnswer2)
+        console.log(userAnswer)
+        console.log("---")
+      }
+       alert(score)
+    }
+  </script>
+  <body onload= "loadJSON()"> 
+  <div id = "output"></div>
+  <button onclick = "Grade() + displayData2()">Next Quiz</button>
+  
+  </body>
+
+</html>
